@@ -1,7 +1,7 @@
 import fs from 'fs'
 import imageKit from '../configs/imageKit.js'
 import Blog from '../models/Blog.js'
-
+import generateContentFromGemini from '../configs/gemini.js'
 
 export const addBlog=async(req,res)=>{
 
@@ -143,7 +143,16 @@ export const getBlogComments=async(req,res)=>{
 }
 
 export const generateContent=async(req,res)=>{
-    
+
+    try{
+         const {prompt}=req.body ;
+         const content=await generateContentFromGemini(prompt)
+
+         res.status(200).json({success:true,content})
+
+    }catch(err){
+         res.status(500).json({success:false,message:err.message})
+    }
 }
 
 export const getBlogsByCategory=async(req,res)=>{

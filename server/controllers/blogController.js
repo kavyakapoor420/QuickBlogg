@@ -111,10 +111,40 @@ export const togglePublished=async(req,res)=>{
 }
 
 export const addComment=async(req,res)=>{
-    
+
+    try{
+         const {blog,name,content}=req.body ;
+
+         await Comment.create({blog,name,content})
+
+         res.status(201).json({success:true,message:"comment addedd for review successfully"})
+
+    }catch(err){
+        res.status(500).json({success:false,message:err.message})
+    }
 }
 
+export const getBlogComments=async(req,res)=>{
 
+    try{
+        const {blogId}=req.params ;
+        const comments=await Comment.find({
+            blog:blogId,isApproved:true
+        }).sort({createdAt:-1})
+
+        res.status(200).json({success:true,comments})
+
+    }catch(err){
+
+        res.status(500).json({success:false,message:err.message})
+        console.log(err)
+
+    }
+}
+
+export const generateContent=async(req,res)=>{
+    
+}
 
 export const getBlogsByCategory=async(req,res)=>{
 
